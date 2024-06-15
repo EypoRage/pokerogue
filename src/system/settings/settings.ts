@@ -425,7 +425,9 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
     break;
   case SettingKeys.Show_Type_Effectiveness_Flyout:
     scene.showTypeEffectivenessFlyout = Setting[index].options[value] === "On";
-    if (scene.typeEffectivenessFlyout) scene.typeEffectivenessFlyout.toggleFlyout(false);
+    if (scene.typeEffectivenessFlyout) {
+      scene.typeEffectivenessFlyout.toggleFlyout(false);
+    }
     break;
   case SettingKeys.Show_Time_Of_Day_Widget:
     scene.showTimeOfDayWidget = Setting[index].options[value] === "On";

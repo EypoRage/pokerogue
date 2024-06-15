@@ -58,7 +58,7 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
     super(scene, 0, 0);
 
     this.typeIcons = [[],[]];
-    this.state = State.CLOSED
+    this.state = State.CLOSED;
 
     this.battleScene = this.scene as BattleScene;
 
@@ -148,13 +148,13 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
       return;
     }
 
-    this.updateDisplayData()  
-    this.showTypes() 
+    this.updateDisplayData();
+    this.showTypes();
   }
 
   updateDisplayData = () => {
     this.clearFlyout();
-    
+
     const type1 = this.battleScene.getEnemyField()[0].species.type1;
     const type2 = this.battleScene.getEnemyField()[0].species.type2;
     const typeEffectiveness = calculateAndSortDamageMultipliers([Type[type1],Type[type2]]);
@@ -166,7 +166,7 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
     this.generateTypeImages(133,15,12,6,typeEffectiveness, "x025",0);
     this.generateTypeImages(153,15,12,6,typeEffectiveness, "x0",0);
 
-    if(this.battleScene.getEnemyField()[1]){
+    if (this.battleScene.getEnemyField()[1]) {
       const type1 = this.battleScene.getEnemyField()[1].species.type1;
       const type2 = this.battleScene.getEnemyField()[1].species.type2;
       const typeEffectiveness = calculateAndSortDamageMultipliers([Type[type1],Type[type2]]);
@@ -178,7 +178,7 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
       this.generateTypeImages(133,15,12,6,typeEffectiveness, "x025",1);
       this.generateTypeImages(153,15,12,6,typeEffectiveness, "x0",1);
     }
-  }
+  };
 
   getTypeIcon = (xCoord:integer, yCoord:integer, type: string, tera: boolean = false) : Phaser.GameObjects.Sprite => {
     const typeIcon = !tera? this.scene.add.sprite(xCoord,yCoord, `types${Utils.verifyLang(i18next.resolvedLanguage) ? `_${i18next.resolvedLanguage}` : ""}`, Type[type].toLowerCase())          : this.scene.add.sprite(xCoord, 42, "type_tera");
@@ -193,45 +193,45 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
   };
 
   showTypes= () => {
-    if (this.state === State.CLOSED){
-      this.flyoutTextHeader.setText("Type Effectiveness: none")
+    if (this.state === State.CLOSED) {
+      this.flyoutTextHeader.setText("Type Effectiveness: none");
       this.typeIcons[0].forEach(typeIcon => {
         typeIcon.visible = false;
       });
       this.typeIcons[1].forEach(typeIcon => {
         typeIcon.visible = false;
       });
-    }else if (this.state === State.POKEMON1){
-      this.updateDisplayData()  
-      if(this.typeIcons[0].length > 0){
-        this.flyoutTextHeader.setText("Type Effectiveness: " + this.battleScene.getEnemyField()[0].name)
+    } else if (this.state === State.POKEMON1) {
+      this.updateDisplayData();
+      if (this.typeIcons[0].length > 0) {
+        this.flyoutTextHeader.setText("Type Effectiveness: " + this.battleScene.getEnemyField()[0].name);
         this.typeIcons[0].forEach(typeIcon => {
           typeIcon.visible = true;
         });
         this.typeIcons[1].forEach(typeIcon => {
           typeIcon.visible = false;
         });
-      }else{
+      } else {
         // skip state
-        this.toggleFlyout(true)
+        this.toggleFlyout(true);
       }
-    }else{
-      this.updateDisplayData()  
-      if(this.battleScene.getEnemyField()[1]){
-        this.flyoutTextHeader.setText("Type Effectiveness: " + this.battleScene.getEnemyField()[1].name)
-      this.typeIcons[0].forEach(typeIcon => {
-        typeIcon.visible = false;
-      });
-      this.typeIcons[1].forEach(typeIcon => {
-        typeIcon.visible = true;
-      });
-      }else{
+    } else {
+      this.updateDisplayData();
+      if (this.battleScene.getEnemyField()[1]) {
+        this.flyoutTextHeader.setText("Type Effectiveness: " + this.battleScene.getEnemyField()[1].name);
+        this.typeIcons[0].forEach(typeIcon => {
+          typeIcon.visible = false;
+        });
+        this.typeIcons[1].forEach(typeIcon => {
+          typeIcon.visible = true;
+        });
+      } else {
         // skip state
-        this.toggleFlyout(true)
+        this.toggleFlyout(true);
       }
-      
+
     }
-  }
+  };
 
 
   generateTypeImages= (x,y, offsetX, offsetY, typeEffectiveness, category,pokemonIndex:integer) =>{
@@ -275,45 +275,45 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
    */
   public toggleFlyout(visible: boolean): void {
 
-    if (!visible){
-        this.state = State.CLOSED
-        this.scene.tweens.add({
-          targets: this.flyoutParent,
-          x: this.anchorX - this.translationX,
-          duration: Utils.fixedInt(125),
-          ease: "Sine.easeInOut",
-          alpha: 0 })
-          return
+    if (!visible) {
+      this.state = State.CLOSED;
+      this.scene.tweens.add({
+        targets: this.flyoutParent,
+        x: this.anchorX - this.translationX,
+        duration: Utils.fixedInt(125),
+        ease: "Sine.easeInOut",
+        alpha: 0 });
+      return;
     }
 
-    switch(this.state){
-      case State.CLOSED:
-        this.state = State.POKEMON1
-        this.scene.tweens.add({
-          targets: this.flyoutParent,
-          x: this.anchorX,
-          duration: Utils.fixedInt(125),
-          ease: "Sine.easeInOut",
-          alpha: 1 })
+    switch (this.state) {
+    case State.CLOSED:
+      this.state = State.POKEMON1;
+      this.scene.tweens.add({
+        targets: this.flyoutParent,
+        x: this.anchorX,
+        duration: Utils.fixedInt(125),
+        ease: "Sine.easeInOut",
+        alpha: 1 });
 
-          this.showTypes()
+      this.showTypes();
 
-          break
-      case State.POKEMON1:
-        this.state = State.POKEMON2
-        this.showTypes()
+      break;
+    case State.POKEMON1:
+      this.state = State.POKEMON2;
+      this.showTypes();
 
-        break
-      case State.POKEMON2 || !visible:
-        this.state = State.CLOSED
-        this.scene.tweens.add({
-          targets: this.flyoutParent,
-          x: this.anchorX - this.translationX,
-          duration: Utils.fixedInt(125),
-          ease: "Sine.easeInOut",
-          alpha: 0 })
-          break
-    };
+      break;
+    case State.POKEMON2 || !visible:
+      this.state = State.CLOSED;
+      this.scene.tweens.add({
+        targets: this.flyoutParent,
+        x: this.anchorX - this.translationX,
+        duration: Utils.fixedInt(125),
+        ease: "Sine.easeInOut",
+        alpha: 0 });
+      break;
+    }
   }
 
   public destroy(fromScene?: boolean): void {

@@ -190,7 +190,7 @@ export class UiInputs {
     } else if (button === Button.V) {
       this.buttonInfo(true);
     } else if (button === Button.CYCLE_NATURE) {
-      this.buttonAdvancedInfo(true);    
+      this.buttonAdvancedInfo(true);
     }
   }
 
