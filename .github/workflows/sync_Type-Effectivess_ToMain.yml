@@ -23,6 +23,11 @@ jobs:
       - name: Checkout type-effectiveness branch
         run: git checkout type-effectiveness
 
+      - name: Configure Git user
+        run: |
+        git config --global user.email "EypoBot@github.com"
+        git config --global user.name "EypoBot"
+
       - name: Merge main into type-effectiveness
         run: git merge main --no-ff --allow-unrelated-histories
 
