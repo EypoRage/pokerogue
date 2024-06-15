@@ -24,7 +24,7 @@ jobs:
         run: git checkout type-effectiveness
 
       - name: Merge main into type-effectiveness
-        run: git merge main --no-ff
+        run: git merge main --no-ff --allow-unrelated-histories
 
       - name: Push changes
         run: git push origin type-effectiveness
