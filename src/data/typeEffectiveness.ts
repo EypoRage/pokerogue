@@ -60,7 +60,7 @@ export function calculateAndSortDamageMultipliers(defenderTypes: string[]) {
       result.x0.push(moveType);
     }
   }
-  return result
+  return result;
 }
 
 

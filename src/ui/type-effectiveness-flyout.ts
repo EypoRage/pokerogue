@@ -38,7 +38,7 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
   private flyoutWindowHeader: Phaser.GameObjects.NineSlice;
   /** The {@linkcode Phaser.GameObjects.Text} that goes inside of the header */
   private flyoutTextHeader: Phaser.GameObjects.Text;
- 
+
   private flyoutTextHeader4x: Phaser.GameObjects.Text;
   private flyoutTextHeader2x: Phaser.GameObjects.Text;
   private flyoutTextHeader1x: Phaser.GameObjects.Text;
@@ -126,7 +126,7 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
     this.flyoutTextHeader0x.setOrigin(0, 0);
 
     this.flyoutContainer.add(this.flyoutTextHeader0x);
-    
+
 
     this.name = "Fight Flyout";
     this.flyoutParent.name = "Fight Flyout Parent";
@@ -135,7 +135,7 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
     this.battleScene.eventTarget.addEventListener(BattleSceneEventType.POST_SUMMON, this.onPostSummonEvent);
   }
 
-   /**
+  /**
    * Iterates through the fieldEffectInfo array and decrements the duration of each item
    * @param event {@linkcode Event} being sent
    */
@@ -145,18 +145,18 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
       return;
     }
     this.clearFlyout();
-    console.log(postSummonEvent.enemyField)
-    this.flyoutTextHeader.setText("Type Effectiveness: " + postSummonEvent.enemyField[0].name)
-    const type1 = postSummonEvent.enemyField[0].species.type1
-    const type2 = postSummonEvent.enemyField[0].species.type2
-    const typeEffectiveness = calculateAndSortDamageMultipliers([Type[type1],Type[type2]])
+    console.log(postSummonEvent.enemyField);
+    this.flyoutTextHeader.setText("Type Effectiveness: " + postSummonEvent.enemyField[0].name);
+    const type1 = postSummonEvent.enemyField[0].species.type1;
+    const type2 = postSummonEvent.enemyField[0].species.type2;
+    const typeEffectiveness = calculateAndSortDamageMultipliers([Type[type1],Type[type2]]);
 
-    this.generateTyoeImages(5,15,12,6,typeEffectiveness, "x4")
-    this.generateTyoeImages(25,15,12,6,typeEffectiveness, "x2")
-    this.generateTyoeImages(57,15,12,6,typeEffectiveness, "x1")
-    this.generateTyoeImages(101,15,12,6,typeEffectiveness, "x05")
-    this.generateTyoeImages(133,15,12,6,typeEffectiveness, "x025")
-    this.generateTyoeImages(153,15,12,6,typeEffectiveness, "x0")
+    this.generateTyoeImages(5,15,12,6,typeEffectiveness, "x4");
+    this.generateTyoeImages(25,15,12,6,typeEffectiveness, "x2");
+    this.generateTyoeImages(57,15,12,6,typeEffectiveness, "x1");
+    this.generateTyoeImages(101,15,12,6,typeEffectiveness, "x05");
+    this.generateTyoeImages(133,15,12,6,typeEffectiveness, "x025");
+    this.generateTyoeImages(153,15,12,6,typeEffectiveness, "x0");
 
   }
 
@@ -170,31 +170,31 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
     }
     typeIcon.setScale(0.35);
     typeIcon.setOrigin(0, 0);
-    return typeIcon
+    return typeIcon;
   };
 
 
 
   generateTyoeImages= (x,y, offsetX, offsetY, typeEffectiveness, category) =>{
-    if(typeEffectiveness){
-      let typeIcon:Phaser.GameObjects.Sprite; 
-      const yOrigin = y
+    if (typeEffectiveness) {
+      let typeIcon:Phaser.GameObjects.Sprite;
+      const yOrigin = y;
 
       typeEffectiveness[category].forEach((type, i) => {
         typeIcon = this.getTypeIcon(x,y,Type[type]);
         this.typeIcons.push(typeIcon);
         this.flyoutContainer.add(typeIcon);
 
-        y = y+ offsetY
+        y = y+ offsetY;
 
-        if ((i + 1) % 6 === 0){
-          y = yOrigin
-          x = x + offsetX
+        if ((i + 1) % 6 === 0) {
+          y = yOrigin;
+          x = x + offsetX;
         }
 
       });
     }
-  }
+  };
 
   /**
   * Clears labels and images for the next summoned enemy pokemon
@@ -202,8 +202,8 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
   clearFlyout = () =>{
     this.typeIcons.forEach((typeIcon)=>{
       typeIcon.destroy();
-    })
-  }
+    });
+  };
 
   /**
    * Animates the flyout to either show or hide it by applying a fade and translation
