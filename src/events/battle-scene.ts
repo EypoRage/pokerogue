@@ -1,3 +1,4 @@
+import Pokemon, { EnemyPokemon } from "#app/field/pokemon.js";
 import Move from "../data/move";
 import { BerryModifier } from "../modifier/modifier";
 
@@ -41,6 +42,12 @@ export enum BattleSceneEventType {
    * @see {@linkcode NewArenaEvent}
    */
   NEW_ARENA = "onNewArena",
+
+   /**
+   * Triggers after Summon Phase of Pokemon has ended
+   * @see {@linkcode PostSummonEvent}
+   */
+   POST_SUMMON = "onPostSummon",
 }
 
 /**
@@ -128,5 +135,16 @@ export class TurnEndEvent extends Event {
 export class NewArenaEvent extends Event {
   constructor() {
     super(BattleSceneEventType.NEW_ARENA);
+  }
+}
+/**
+ * Container class for {@linkcode BattleSceneEventType.POST_SUMMON} events
+ * @extends Event
+*/
+export class PostSummonEvent extends Event {
+  public enemyField : EnemyPokemon[];
+  constructor(enemyField:EnemyPokemon[]) {
+    super(BattleSceneEventType.POST_SUMMON);
+    this.enemyField = enemyField;
   }
 }

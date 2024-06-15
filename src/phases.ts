@@ -53,7 +53,7 @@ import i18next from "./plugins/i18n";
 import * as Overrides from "./overrides";
 import { TextStyle, addTextObject } from "./ui/text";
 import { Type } from "./data/type";
-import { BerryUsedEvent, EncounterPhaseEvent, MoveUsedEvent, TurnEndEvent, TurnInitEvent } from "./events/battle-scene";
+import { BerryUsedEvent, EncounterPhaseEvent, MoveUsedEvent, TurnEndEvent, TurnInitEvent, PostSummonEvent } from "./events/battle-scene";
 import { Abilities } from "#enums/abilities";
 import { ArenaTagType } from "#enums/arena-tag-type";
 import { BattleSpec } from "#enums/battle-spec";
@@ -1189,7 +1189,7 @@ export class PostSummonPhase extends PokemonPhase {
 
   start() {
     super.start();
-
+    this.scene.eventTarget.dispatchEvent(new PostSummonEvent(this.scene.getEnemyField()));
     const pokemon = this.getPokemon();
 
     if (pokemon.status?.effect === StatusEffect.TOXIC) {
