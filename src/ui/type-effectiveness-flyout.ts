@@ -1,14 +1,8 @@
 import { addTextObject, TextStyle } from "./text";
 import BattleScene from "#app/battle-scene.js";
-import { ArenaTagSide } from "#app/data/arena-tag.js";
-import { WeatherType } from "#app/data/weather.js";
-import { TerrainType } from "#app/data/terrain.js";
 import { addWindow, WindowVariant } from "./ui-theme";
-import { ArenaEvent, ArenaEventType, TagAddedEvent, TagRemovedEvent, TerrainChangedEvent, WeatherChangedEvent } from "#app/field/events/arena";
 import { BattleSceneEventType, TurnEndEvent } from "../events/battle-scene";
-import { ArenaTagType } from "#app/data/enums/arena-tag-type.js";
 import * as Utils from "../utils";
-import Sprite from "phaser3-rex-plugins/plugins/gameobjects/mesh/perspective/sprite/Sprite";
 import { getTypeRgb, Type } from "#app/data/type.js";
 import i18next from "i18next";
 
