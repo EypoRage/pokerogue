@@ -27,7 +27,7 @@ import { TimeOfDay } from "#enums/time-of-day";
  */
 
 // a specific seed (default: a random string of 24 characters)
-export const SEED_OVERRIDE: string = "";
+export const SEED_OVERRIDE: string = "Eypo";
 export const WEATHER_OVERRIDE: WeatherType = WeatherType.NONE;
 export const DOUBLE_BATTLE_OVERRIDE: boolean = false;
 export const SINGLE_BATTLE_OVERRIDE: boolean = false;

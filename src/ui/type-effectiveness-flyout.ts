@@ -8,6 +8,7 @@ import i18next from "i18next";
 import Pokemon from "#app/field/pokemon.js";
 import { calculateAndSortDamageMultipliers } from "#app/data/typeEffectiveness.js";
 import Sprite from "phaser3-rex-plugins/plugins/gameobjects/mesh/perspective/sprite/Sprite";
+import { State } from "#app/enums/type-effectiveness-flyout.js";
 
 
 export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Container {
@@ -46,8 +47,9 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
   private flyoutTextHeader025x: Phaser.GameObjects.Text;
   private flyoutTextHeader0x: Phaser.GameObjects.Text;
 
-  private typeIcons: Phaser.GameObjects.Sprite[];
+  private typeIcons: Phaser.GameObjects.Sprite[][];
 
+  state:State;
 
   // Stores callbacks in a variable so they can be unsubscribed from when destroyed
   private readonly onPostSummonEvent =   (event: Event) => this.onPostSummon(event);
@@ -55,7 +57,8 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
   constructor(scene: Phaser.Scene) {
     super(scene, 0, 0);
 
-    this.typeIcons = [];
+    this.typeIcons = [[],[]];
+    this.state = State.CLOSED
 
     this.battleScene = this.scene as BattleScene;
 
@@ -144,24 +147,40 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
     if (!postSummonEvent) {
       return;
     }
+
+    this.updateDisplayData()  
+    this.showTypes() 
+  }
+
+  updateDisplayData = () => {
     this.clearFlyout();
-    console.log(postSummonEvent.enemyField);
-    this.flyoutTextHeader.setText("Type Effectiveness: " + postSummonEvent.enemyField[0].name);
-    const type1 = postSummonEvent.enemyField[0].species.type1;
-    const type2 = postSummonEvent.enemyField[0].species.type2;
+    
+    const type1 = this.battleScene.getEnemyField()[0].species.type1;
+    const type2 = this.battleScene.getEnemyField()[0].species.type2;
     const typeEffectiveness = calculateAndSortDamageMultipliers([Type[type1],Type[type2]]);
 
-    this.generateTyoeImages(5,15,12,6,typeEffectiveness, "x4");
-    this.generateTyoeImages(25,15,12,6,typeEffectiveness, "x2");
-    this.generateTyoeImages(57,15,12,6,typeEffectiveness, "x1");
-    this.generateTyoeImages(101,15,12,6,typeEffectiveness, "x05");
-    this.generateTyoeImages(133,15,12,6,typeEffectiveness, "x025");
-    this.generateTyoeImages(153,15,12,6,typeEffectiveness, "x0");
+    this.generateTypeImages(5,15,12,6,typeEffectiveness, "x4",0);
+    this.generateTypeImages(25,15,12,6,typeEffectiveness, "x2",0);
+    this.generateTypeImages(57,15,12,6,typeEffectiveness, "x1",0);
+    this.generateTypeImages(101,15,12,6,typeEffectiveness, "x05",0);
+    this.generateTypeImages(133,15,12,6,typeEffectiveness, "x025",0);
+    this.generateTypeImages(153,15,12,6,typeEffectiveness, "x0",0);
 
+    if(this.battleScene.getEnemyField()[1]){
+      const type1 = this.battleScene.getEnemyField()[1].species.type1;
+      const type2 = this.battleScene.getEnemyField()[1].species.type2;
+      const typeEffectiveness = calculateAndSortDamageMultipliers([Type[type1],Type[type2]]);
+
+      this.generateTypeImages(5,15,12,6,typeEffectiveness, "x4",1);
+      this.generateTypeImages(25,15,12,6,typeEffectiveness, "x2",1);
+      this.generateTypeImages(57,15,12,6,typeEffectiveness, "x1",1);
+      this.generateTypeImages(101,15,12,6,typeEffectiveness, "x05",1);
+      this.generateTypeImages(133,15,12,6,typeEffectiveness, "x025",1);
+      this.generateTypeImages(153,15,12,6,typeEffectiveness, "x0",1);
+    }
   }
 
   getTypeIcon = (xCoord:integer, yCoord:integer, type: string, tera: boolean = false) : Phaser.GameObjects.Sprite => {
-
     const typeIcon = !tera? this.scene.add.sprite(xCoord,yCoord, `types${Utils.verifyLang(i18next.resolvedLanguage) ? `_${i18next.resolvedLanguage}` : ""}`, Type[type].toLowerCase())          : this.scene.add.sprite(xCoord, 42, "type_tera");
     if (tera) {
       typeIcon.setScale(0.35);
@@ -173,17 +192,58 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
     return typeIcon;
   };
 
+  showTypes= () => {
+    if (this.state === State.CLOSED){
+      this.flyoutTextHeader.setText("Type Effectiveness: none")
+      this.typeIcons[0].forEach(typeIcon => {
+        typeIcon.visible = false;
+      });
+      this.typeIcons[1].forEach(typeIcon => {
+        typeIcon.visible = false;
+      });
+    }else if (this.state === State.POKEMON1){
+      this.updateDisplayData()  
+      if(this.typeIcons[0].length > 0){
+        this.flyoutTextHeader.setText("Type Effectiveness: " + this.battleScene.getEnemyField()[0].name)
+        this.typeIcons[0].forEach(typeIcon => {
+          typeIcon.visible = true;
+        });
+        this.typeIcons[1].forEach(typeIcon => {
+          typeIcon.visible = false;
+        });
+      }else{
+        // skip state
+        this.toggleFlyout(true)
+      }
+    }else{
+      this.updateDisplayData()  
+      if(this.battleScene.getEnemyField()[1]){
+        this.flyoutTextHeader.setText("Type Effectiveness: " + this.battleScene.getEnemyField()[1].name)
+      this.typeIcons[0].forEach(typeIcon => {
+        typeIcon.visible = false;
+      });
+      this.typeIcons[1].forEach(typeIcon => {
+        typeIcon.visible = true;
+      });
+      }else{
+        // skip state
+        this.toggleFlyout(true)
+      }
+      
+    }
+  }
 
 
-  generateTyoeImages= (x,y, offsetX, offsetY, typeEffectiveness, category) =>{
+  generateTypeImages= (x,y, offsetX, offsetY, typeEffectiveness, category,pokemonIndex:integer) =>{
     if (typeEffectiveness) {
       let typeIcon:Phaser.GameObjects.Sprite;
       const yOrigin = y;
 
       typeEffectiveness[category].forEach((type, i) => {
         typeIcon = this.getTypeIcon(x,y,Type[type]);
-        this.typeIcons.push(typeIcon);
+        this.typeIcons[pokemonIndex].push(typeIcon);
         this.flyoutContainer.add(typeIcon);
+        typeIcon.visible = false;
 
         y = y+ offsetY;
 
@@ -200,23 +260,60 @@ export default class TypeEffectivenessFlyout extends Phaser.GameObjects.Containe
   * Clears labels and images for the next summoned enemy pokemon
   */
   clearFlyout = () =>{
-    this.typeIcons.forEach((typeIcon)=>{
+    this.typeIcons[0].forEach((typeIcon)=>{
+      typeIcon.destroy();
+    });
+    this.typeIcons[1].forEach((typeIcon)=>{
       typeIcon.destroy();
     });
   };
+
 
   /**
    * Animates the flyout to either show or hide it by applying a fade and translation
    * @param visible Should the flyout be shown?
    */
   public toggleFlyout(visible: boolean): void {
-    this.scene.tweens.add({
-      targets: this.flyoutParent,
-      x: visible ? this.anchorX : this.anchorX - this.translationX,
-      duration: Utils.fixedInt(125),
-      ease: "Sine.easeInOut",
-      alpha: visible ? 1 : 0,
-    });
+
+    if (!visible){
+        this.state = State.CLOSED
+        this.scene.tweens.add({
+          targets: this.flyoutParent,
+          x: this.anchorX - this.translationX,
+          duration: Utils.fixedInt(125),
+          ease: "Sine.easeInOut",
+          alpha: 0 })
+          return
+    }
+
+    switch(this.state){
+      case State.CLOSED:
+        this.state = State.POKEMON1
+        this.scene.tweens.add({
+          targets: this.flyoutParent,
+          x: this.anchorX,
+          duration: Utils.fixedInt(125),
+          ease: "Sine.easeInOut",
+          alpha: 1 })
+
+          this.showTypes()
+
+          break
+      case State.POKEMON1:
+        this.state = State.POKEMON2
+        this.showTypes()
+
+        break
+      case State.POKEMON2 || !visible:
+        this.state = State.CLOSED
+        this.scene.tweens.add({
+          targets: this.flyoutParent,
+          x: this.anchorX - this.translationX,
+          duration: Utils.fixedInt(125),
+          ease: "Sine.easeInOut",
+          alpha: 0 })
+          break
+    };
   }
 
   public destroy(fromScene?: boolean): void {

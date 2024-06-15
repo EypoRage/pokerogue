@@ -142,9 +142,7 @@ export class NewArenaEvent extends Event {
  * @extends Event
 */
 export class PostSummonEvent extends Event {
-  public enemyField : EnemyPokemon[];
-  constructor(enemyField:EnemyPokemon[]) {
+  constructor() {
     super(BattleSceneEventType.POST_SUMMON);
-    this.enemyField = enemyField;
   }
 }

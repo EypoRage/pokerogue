@@ -107,7 +107,7 @@ export class UiInputs {
       [Button.CYCLE_FORM]:      () => undefined,
       [Button.CYCLE_GENDER]:    () => undefined,
       [Button.CYCLE_ABILITY]:   () => undefined,
-      [Button.CYCLE_NATURE]:    () => this.buttonAdvancedInfo(false),
+      [Button.CYCLE_NATURE]:    () => undefined,
       [Button.V]:               () => this.buttonInfo(false),
       [Button.SPEED_UP]:        () => undefined,
       [Button.SLOW_DOWN]:       () => undefined,
@@ -190,7 +190,7 @@ export class UiInputs {
     } else if (button === Button.V) {
       this.buttonInfo(true);
     } else if (button === Button.CYCLE_NATURE) {
-      this.buttonAdvancedInfo(true);
+      this.buttonAdvancedInfo(true);    
     }
   }
 

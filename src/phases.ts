@@ -1189,7 +1189,7 @@ export class PostSummonPhase extends PokemonPhase {
 
   start() {
     super.start();
-    this.scene.eventTarget.dispatchEvent(new PostSummonEvent(this.scene.getEnemyField()));
+    this.scene.eventTarget.dispatchEvent(new PostSummonEvent());
     const pokemon = this.getPokemon();
 
     if (pokemon.status?.effect === StatusEffect.TOXIC) {

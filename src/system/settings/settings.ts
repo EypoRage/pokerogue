@@ -59,6 +59,7 @@ export const SettingKeys = {
   Move_Info: "MOVE_INFO",
   Show_Moveset_Flyout: "SHOW_MOVESET_FLYOUT",
   Show_Arena_Flyout: "SHOW_ARENA_FLYOUT",
+  Show_Type_Effectiveness_Flyout: "Show_Type_Effectiveness_Flyout",
   Show_Time_Of_Day_Widget: "SHOW_TIME_OF_DAY_WIDGET",
   Time_Of_Day_Animation: "TIME_OF_DAY_ANIMATION",
   Sprite_Set: "SPRITE_SET",
@@ -228,6 +229,13 @@ export const Setting: Array<Setting> = [
   {
     key: SettingKeys.Show_Arena_Flyout,
     label: "Show Battle Effects Flyout",
+    options: OFF_ON,
+    default: 1,
+    type: SettingType.DISPLAY
+  },
+  {
+    key: SettingKeys.Show_Type_Effectiveness_Flyout,
+    label: "Show Type Effectiveness Flyout",
     options: OFF_ON,
     default: 1,
     type: SettingType.DISPLAY
@@ -414,6 +422,10 @@ export function setSetting(scene: BattleScene, setting: string, value: integer):
     break;
   case SettingKeys.Show_Arena_Flyout:
     scene.showArenaFlyout = Setting[index].options[value] === "On";
+    break;
+  case SettingKeys.Show_Type_Effectiveness_Flyout:
+    scene.showTypeEffectivenessFlyout = Setting[index].options[value] === "On";
+    if (scene.typeEffectivenessFlyout) scene.typeEffectivenessFlyout.toggleFlyout(false);
     break;
   case SettingKeys.Show_Time_Of_Day_Widget:
     scene.showTimeOfDayWidget = Setting[index].options[value] === "On";
