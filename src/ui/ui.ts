@@ -246,6 +246,21 @@ export default class UI extends Phaser.GameObjects.Container {
     return true;
   }
 
+  processAdvancedInfoButton(pressed: boolean) {
+    if (this.overlayActive) {
+      return false;
+    }
+
+    const battleScene = this.scene as BattleScene;
+    if ([Mode.CONFIRM, Mode.COMMAND, Mode.FIGHT, Mode.MESSAGE].includes(this.mode)) {
+      battleScene?.processAdvancedInfoButton(pressed);
+      return true;
+    }
+
+    battleScene?.processAdvancedInfoButton(false);
+    return true;
+  }
+
   processInput(button: Button): boolean {
     if (this.overlayActive) {
       return false;

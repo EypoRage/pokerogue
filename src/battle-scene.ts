@@ -65,6 +65,9 @@ import { PlayerGender } from "#enums/player-gender";
 import { Species } from "#enums/species";
 import { UiTheme } from "#enums/ui-theme";
 import { TimedEventManager } from "#app/timed-event-manager.js";
+import { EaseType } from "./ui/enums/ease-type";
+import { ExpNotification } from "./enums/exp-notification";
+import TypeEffectivenessFlyout from "./ui/type-effectiveness-flyout";
 
 export const bypassLogin = import.meta.env.VITE_BYPASS_LOGIN === "1";
 
@@ -111,6 +114,7 @@ export default class BattleScene extends SceneBase {
   public reroll: boolean = false;
   public showMovesetFlyout: boolean = true;
   public showArenaFlyout: boolean = true;
+  public showTypeEffectivenessFlyout: boolean = true;
   public showTimeOfDayWidget: boolean = true;
   public timeOfDayAnimation: EaseType = EaseType.NONE;
   public showLevelUpStats: boolean = true;
@@ -216,6 +220,7 @@ export default class BattleScene extends SceneBase {
   private modifierBar: ModifierBar;
   private enemyModifierBar: ModifierBar;
   public arenaFlyout: ArenaFlyout;
+  public typeEffectivenessFlyout: TypeEffectivenessFlyout;
 
   private fieldOverlay: Phaser.GameObjects.Rectangle;
   public modifiers: PersistentModifier[];
@@ -460,6 +465,10 @@ export default class BattleScene extends SceneBase {
     this.arenaFlyout = new ArenaFlyout(this);
     this.fieldUI.add(this.arenaFlyout);
     this.fieldUI.moveBelow<Phaser.GameObjects.GameObject>(this.arenaFlyout, this.fieldOverlay);
+
+    this.typeEffectivenessFlyout = new TypeEffectivenessFlyout(this);
+    this.fieldUI.add(this.typeEffectivenessFlyout);
+    this.fieldUI.moveBelow<Phaser.GameObjects.GameObject>(this.typeEffectivenessFlyout, this.fieldOverlay);
 
     this.updateUIPositions();
 
@@ -1370,6 +1379,10 @@ export default class BattleScene extends SceneBase {
   }
   processInfoButton(pressed: boolean): void {
     this.arenaFlyout.toggleFlyout(pressed);
+  }
+
+  processAdvancedInfoButton(pressed: boolean): void {
+    this.typeEffectivenessFlyout.toggleFlyout(pressed);
   }
 
   showFieldOverlay(duration: integer): Promise<void> {
